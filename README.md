@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏰 PropertiSync — PropTech Funnel Intelligence & CRM Automation
 
 > **Platform Web Analitik Corong Penjualan Properti Mewah & Radar Anti-Ghosting**  
@@ -117,3 +118,6 @@ Aplikasi ini menggunakan teknologi murni tanpa build tool Node.js yang rumit:
 2. Klik kanan pada `home.html`.
 3. Pilih **"Open with Live Server"**.
 4. Akses melalui browser di `http://127.0.0.1:5500/home.html`.
+=======
+# EduFunnel
+>>>>>>> a042607df2e840b790d63ca2d16e7d0daaf2e3a4
