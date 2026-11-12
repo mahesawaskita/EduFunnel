@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PropertiSync Executive Dashboard | Grand Vista Residence (Bu Nisa)</title>
+
+  <!-- Google Font: Poppins & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <!-- CSS Design System -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <!-- ================= AUTH PAGE (LOGIN & REGISTER) ================= -->
+  <section id="authPage" class="auth-page">
+    <header class="auth-header">
+      <a href="home.html" class="brand-group">
+        <div class="brand-logo-icon">PS</div>
+        <div class="brand-text-col">
+          <span class="brand-name">Properti<span>Sync</span></span>
+          <span class="brand-tagline">Portal Eksekutif Developer</span>
+        </div>
+      </a>
+
+      <a href="home.html" class="btn-back-home">
+        <span>🏠</span>
+        <span>Kembali ke Home Screen</span>
+      </a>
+    </header>
+
+    <div class="auth-body-container">
+      <div class="auth-card-glass">
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+          <button type="button" id="tabLogin" class="auth-tab-btn active">Masuk Eksekutif</button>
+          <button type="button" id="tabRegister" class="auth-tab-btn">Registrasi Developer</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="loginFormContainer">
+          <h2 class="auth-form-title">Executive Sign In</h2>
+          <p class="auth-form-subtitle">Akses dasbor analitik penjualan dan radar ghosting Grand Vista Residence.</p>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginEmail">Email Perusahaan Developer</label>
+              <input type="email" id="loginEmail" value="nisa.vpsales@grandvista.co.id" placeholder="nama@developer.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Kata Sandi</label>
+              <input type="password" id="loginPassword" value="grandvista2026" placeholder="••••••••" required />
+            </div>
+
+            <button type="submit" class="btn-gold btn-auth-submit">
+              Akses Executive Dashboard &rarr;
+            </button>
+          </form>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="registerFormContainer" class="hidden">
+          <h2 class="auth-form-title">Daftar Developer Baru</h2>
+          <p class="auth-form-subtitle">Tingkatkan efisiensi pemasaran properti dan kurangi ghosting leads.</p>
+
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="regName">Nama Lengkap & Jabatan</label>
+              <input type="text" id="regName" placeholder="Contoh: Anisa Rahmawati - VP Sales" required />
+            </div>
+
+            <div class="form-group">
+              <label for="regProject">Nama Proyek / Perumahan</label>
+              <input type="text" id="regProject" placeholder="Contoh: Grand Vista Residence" required />
+            </div>
+
+            <div class="form-group">
+              <label for="regEmail">Email Resmi Developer</label>
+              <input type="email" id="regEmail" placeholder="sales@grandvista.co.id" required />
+            </div>
+
+            <div class="form-group">
+              <label for="regPassword">Kata Sandi</label>
+              <input type="password" id="regPassword" placeholder="Minimal 8 karakter" required />
+            </div>
+
+            <button type="submit" class="btn-gold btn-auth-submit">
+              Daftarkan Developer &rarr;
+            </button>
+          </form>
+        </div>
+
+        <!-- DEMO SHORTCUT BUTTON (CORE REQUIREMENT) -->
+        <div class="demo-shortcut-box">
+          <p style="font-size: 12.5px; color: var(--gold-primary); margin-bottom: 8px; font-weight: 600;">
+            Langsung eksplorasi tanpa verifikasi database:
+          </p>
+          <button type="button" id="btnQuickDemo" class="btn-demo-login">
+            <span>⚡ Mode Demo: Masuk Sebagai Bu Nisa</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD PAGE (CLIENT: BU NISA) ================= -->
+  <section id="dashboardPage" class="dashboard-page hidden">
+    <!-- SIDEBAR KIRI -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo-icon">PS</div>
+        <div class="brand-text-col">
+          <span class="brand-name">Properti<span>Sync</span></span>
+          <span class="brand-tagline">Funnel & CRM Engine</span>
+        </div>
+      </div>
+
+      <div class="sidebar-client-tag">
+        <span>Proyek Developer Aktif:</span>
+        <strong>Grand Vista Residence</strong>
+      </div>
+
+      <nav class="sidebar-menu">
+        <button type="button" class="menu-item active" data-page="overview">
+          <span>📊</span>
+          <span>Executive Overview</span>
+        </button>
+
+        <button type="button" class="menu-item" data-page="ghosting">
+          <span>🚨</span>
+          <span>Ghosting Radar</span>
+        </button>
+
+        <button type="button" class="menu-item" data-page="channel">
+          <span>⚖️</span>
+          <span>Channel ROI (Meta vs TikTok)</span>
+        </button>
+
+        <button type="button" class="menu-item" data-page="unit">
+          <span>🏡</span>
+          <span>Unit Performance</span>
+        </button>
+
+        <button type="button" class="menu-item" data-page="crm">
+          <span>💬</span>
+          <span>CRM Leads Data</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button type="button" id="logoutButton" class="btn-logout">
+          <span>🚪</span>
+          <span>Keluar / Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- HEADER DASHBOARD STICKY -->
+      <header class="dashboard-header">
+        <div class="header-filters">
+          <!-- Filter Tipe Unit -->
+          <select id="unitFilter" class="filter-select">
+            <option value="all">Semua Cluster (All Units)</option>
+            <option value="Cluster Ruby">Cluster Ruby (85/120)</option>
+            <option value="Cluster Emerald">Cluster Emerald (115/150)</option>
+            <option value="Sapphire Villa">Sapphire Villa Suites</option>
+          </select>
+
+          <!-- Filter Rentang Waktu -->
+          <select id="dateFilter" class="filter-select">
+            <option value="7">7 Hari Terakhir</option>
+            <option value="month" selected>Bulan Ini (Mei 2026)</option>
+            <option value="quarter">Kuartal 1 & 2 (Launching)</option>
+          </select>
+        </div>
+
+        <div class="header-user-persona">
+          <div class="persona-tag-gold">
+            <span>👑</span>
+            <span>Bu Nisa • VP of Sales & Marketing</span>
+          </div>
+
+          <a href="home.html" class="btn-back-home" title="Kembali ke Landing Page Agensi">
+            <span>🏠</span>
+            <span>Home PropertiSync</span>
+          </a>
+
+          <div class="persona-avatar-gold" title="Profil Bu Nisa">BN</div>
+        </div>
+      </header>
+
+      <!-- DYNAMIC APP CONTAINER -->
+      <div id="app" class="dashboard-view-body">
+        <!-- Rendered by js/main.js -->
+      </div>
+    </main>
+  </section>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- JAVASCRIPT -->
+  <script src="js/data_proptech.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
