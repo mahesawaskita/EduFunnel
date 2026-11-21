@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +9,9 @@
   <!-- Google Font: Poppins & Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
@@ -51,7 +54,8 @@
           <form id="loginForm">
             <div class="form-group">
               <label for="loginEmail">Email Perusahaan Developer</label>
-              <input type="email" id="loginEmail" value="nisa.vpsales@grandvista.co.id" placeholder="nama@developer.com" required />
+              <input type="email" id="loginEmail" value="nisa.vpsales@grandvista.co.id" placeholder="nama@developer.com"
+                required />
             </div>
 
             <div class="form-group">
@@ -83,7 +87,7 @@
 
             <div class="form-group">
               <label for="regEmail">Email Resmi Developer</label>
-              <input type="email" id="regEmail" placeholder="sales@grandvista.co.id" required />
+              <input type="email" id="regEmail" placeholder="sales@developer.co.id" required />
             </div>
 
             <div class="form-group">
@@ -97,7 +101,7 @@
           </form>
         </div>
 
-        <!-- DEMO SHORTCUT BUTTON (CORE REQUIREMENT) -->
+        <!-- DEMO SHORTCUT BUTTON -->
         <div class="demo-shortcut-box">
           <p style="font-size: 12.5px; color: var(--gold-primary); margin-bottom: 8px; font-weight: 600;">
             Langsung eksplorasi tanpa verifikasi database:
@@ -110,8 +114,9 @@
     </div>
   </section>
 
-  <!-- ================= DASHBOARD PAGE (CLIENT: BU NISA) ================= -->
+  <!-- ================= DASHBOARD PAGE ================= -->
   <section id="dashboardPage" class="dashboard-page hidden">
+
     <!-- SIDEBAR KIRI -->
     <aside class="sidebar">
       <div class="sidebar-brand">
@@ -127,7 +132,9 @@
         <strong>Grand Vista Residence</strong>
       </div>
 
+      <!-- SIDEBAR MENU -->
       <nav class="sidebar-menu">
+
         <button type="button" class="menu-item active" data-page="overview">
           <span>📊</span>
           <span>Executive Overview</span>
@@ -152,6 +159,13 @@
           <span>💬</span>
           <span>CRM Leads Data</span>
         </button>
+
+        <!-- MENU BARU: ANALISIS SUS -->
+        <button type="button" class="menu-item" data-page="sus">
+          <span>📋</span>
+          <span>Analisis Kuesioner SUS</span>
+        </button>
+
       </nav>
 
       <div class="sidebar-footer">
@@ -164,10 +178,11 @@
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-      <!-- HEADER DASHBOARD STICKY -->
+
+      <!-- HEADER DASHBOARD -->
       <header class="dashboard-header">
         <div class="header-filters">
-          <!-- Filter Tipe Unit -->
+
           <select id="unitFilter" class="filter-select">
             <option value="all">Semua Cluster (All Units)</option>
             <option value="Cluster Ruby">Cluster Ruby (85/120)</option>
@@ -175,12 +190,12 @@
             <option value="Sapphire Villa">Sapphire Villa Suites</option>
           </select>
 
-          <!-- Filter Rentang Waktu -->
           <select id="dateFilter" class="filter-select">
             <option value="7">7 Hari Terakhir</option>
             <option value="month" selected>Bulan Ini (Mei 2026)</option>
             <option value="quarter">Kuartal 1 & 2 (Launching)</option>
           </select>
+
         </div>
 
         <div class="header-user-persona">
@@ -200,8 +215,9 @@
 
       <!-- DYNAMIC APP CONTAINER -->
       <div id="app" class="dashboard-view-body">
-        <!-- Rendered by js/main.js -->
+        <!-- Konten halaman dirender oleh js/main.js -->
       </div>
+
     </main>
   </section>
 
@@ -211,5 +227,7 @@
   <!-- JAVASCRIPT -->
   <script src="js/data_proptech.js"></script>
   <script src="js/main.js"></script>
+
 </body>
+
 </html>
