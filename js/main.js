@@ -305,7 +305,10 @@ async function loadSusData() {
 
   try {
     const response = await fetch(SUS_API_URL, {
-      method: "GET"
+      method: "GET",
+      headers: {
+        "ngrok-skip-browser-warning": "1"
+      }
     });
 
     if (!response.ok) {
