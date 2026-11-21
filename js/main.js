@@ -10,6 +10,12 @@ let currentUnit = "all";
 let currentDateRange = "month";
 let activeChartInstance = null;
 
+
+// ================= SUS API CONFIGURATION =================
+const SUS_API_URL =
+  "https://bobbed-unicycle-retry.ngrok-free.dev/webhook/dashboard-sus";
+
+let susRespondents = [];
 // Local copy of CRM leads for real-time simulation
 let liveCrmLeads = [];
 
@@ -176,7 +182,10 @@ function renderCurrentView() {
 
 
 // ================= VIEW: ANALISIS KUESIONER SUS =================
-function renderSusAnalysis() {
+
+
+// ================= VIEW: ANALISIS KUESIONER SUS =================
+async function renderSusAnalysis() {
   appContainer.innerHTML = `
     <section class="page-header-title">
       <div class="page-subtitle-top">USER EXPERIENCE INTELLIGENCE</div>
@@ -189,74 +198,302 @@ function renderSusAnalysis() {
 
     <section class="metrics-summary-grid">
       <div class="metric-card-gold">
-        <div class="metric-card-top">
-          <span class="metric-card-title">Total Responden</span>
-        </div>
-        <div class="metric-number-val">-</div>
-        <div class="metric-sub-note">Data menunggu koneksi n8n</div>
+        <div class="metric-card-title">Total Responden</div>
+        <div class="metric-number-val" id="susTotal">-</div>
+        <div class="metric-sub-note">Jumlah seluruh pengisi kuesioner</div>
       </div>
 
       <div class="metric-card-gold">
-        <div class="metric-card-top">
-          <span class="metric-card-title">Rata-rata Skor SUS</span>
-        </div>
-        <div class="metric-number-val">-</div>
+        <div class="metric-card-title">Rata-rata Skor SUS</div>
+        <div class="metric-number-val" id="susAverage">-</div>
         <div class="metric-sub-note">Skala penilaian 0–100</div>
       </div>
 
       <div class="metric-card-gold">
-        <div class="metric-card-top">
-          <span class="metric-card-title">Kategori Usability</span>
-        </div>
-        <div class="metric-number-val">-</div>
-        <div class="metric-sub-note">Menunggu hasil perhitungan</div>
+        <div class="metric-card-title">Kategori Usability</div>
+        <div class="metric-number-val" id="susCategory">-</div>
+        <div class="metric-sub-note">Acuan benchmark SUS: 68</div>
       </div>
 
       <div class="metric-card-gold">
-        <div class="metric-card-top">
-          <span class="metric-card-title">Status Data</span>
+        <div class="metric-card-title">Status Data</div>
+        <div class="metric-number-val" id="susStatus"
+          style="font-size: 20px;">Menghubungkan...</div>
+        <div class="metric-sub-note" id="susStatusNote">
+          Mengambil data dari n8n
         </div>
-        <div class="metric-number-val" style="font-size: 20px;">
-          Belum Terhubung
-        </div>
-        <div class="metric-sub-note">Integrasi Supabase dan n8n</div>
       </div>
     </section>
 
-    <section style="
-      margin-top: 24px;
-      padding: 28px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(251,191,36,0.25);
-      border-radius: 12px;
-    ">
-      <h2 style="color: var(--gold-primary); margin-bottom: 12px;">
-        Data Evaluasi Pengguna
-      </h2>
+    <section class="chart-card-box" style="margin-top: 24px;">
+      <h3>Ringkasan Skor SUS</h3>
+      <p>Perbandingan skor setiap responden.</p>
+      <div id="susChartArea" style="margin-top: 20px;">
+        <p style="color: var(--text-muted);">Memuat data...</p>
+      </div>
+    </section>
 
-      <p style="
-        color: var(--text-muted);
-        line-height: 1.7;
-        margin-bottom: 18px;
-      ">
-        Halaman ini akan menampilkan hasil kuesioner SUS yang
-        dikirim melalui Website PropTech Form Portal dan disimpan
-        di Supabase.
-      </p>
+    <section class="data-table-card" style="margin-top: 24px;">
+      <div class="table-header-action-bar">
+        <div>
+          <h3>Data Evaluasi Pengguna</h3>
+          <span style="font-size: 13px; color: var(--text-secondary);">
+            Daftar responden yang tersimpan di Supabase.
+          </span>
+        </div>
 
-      <div style="
-        padding: 16px;
-        border-radius: 8px;
-        background: rgba(251,191,36,0.08);
-        border: 1px solid rgba(251,191,36,0.2);
-        color: #fbbf24;
-      ">
-        Menunggu integrasi workflow n8n untuk mengambil dan
-        mengolah data responden.
+        <button type="button" class="btn-trigger-crm"
+          id="susRefreshButton">
+          ↻ Refresh Data
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="custom-data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nama Responden</th>
+              <th>Peran</th>
+              <th>Sumber Trafik</th>
+              <th>Tahap Funnel</th>
+              <th>Skor SUS</th>
+              <th>Tanggal</th>
+            </tr>
+          </thead>
+          <tbody id="susTableBody">
+            <tr>
+              <td colspan="7" style="text-align: center;">
+                Mengambil data responden...
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   `;
+
+  const refreshButton = document.getElementById("susRefreshButton");
+
+  if (refreshButton) {
+    refreshButton.addEventListener("click", loadSusData);
+  }
+
+  await loadSusData();
 }
+
+
+// ================= SUS DATA API =================
+async function loadSusData() {
+  const statusElement = document.getElementById("susStatus");
+  const statusNote = document.getElementById("susStatusNote");
+  const tableBody = document.getElementById("susTableBody");
+  const chartArea = document.getElementById("susChartArea");
+
+  if (!statusElement || !tableBody) return;
+
+  statusElement.textContent = "Menghubungkan...";
+  statusNote.textContent = "Mengambil data dari n8n";
+
+  tableBody.innerHTML = `
+    <tr>
+      <td colspan="7" style="text-align: center;">
+        Memuat data responden...
+      </td>
+    </tr>
+  `;
+
+  try {
+    const response = await fetch(SUS_API_URL, {
+      method: "GET"
+    });
+
+    if (!response.ok) {
+      throw new Error("HTTP Error: " + response.status);
+    }
+
+    const result = await response.json();
+
+    // Mendukung respons array maupun satu objek
+    susRespondents = Array.isArray(result)
+      ? result
+      : [result];
+
+    // Pastikan halaman SUS masih sedang dibuka
+    if (currentPage !== "sus") return;
+
+    renderSusData(susRespondents);
+
+  } catch (error) {
+    console.error("Gagal mengambil data SUS:", error);
+
+    statusElement.textContent = "Gagal";
+    statusNote.textContent = "Periksa koneksi API n8n";
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align: center; color: var(--orange-neon);">
+          Gagal mengambil data. Silakan coba refresh.
+        </td>
+      </tr>
+    `;
+
+    if (chartArea) {
+      chartArea.innerHTML = `
+        <p style="color: var(--orange-neon);">
+          Koneksi API belum berhasil.
+        </p>
+      `;
+    }
+  }
+}
+
+
+// ================= RENDER SUS DATA =================
+function renderSusData(data) {
+  const totalElement = document.getElementById("susTotal");
+  const averageElement = document.getElementById("susAverage");
+  const categoryElement = document.getElementById("susCategory");
+  const statusElement = document.getElementById("susStatus");
+  const statusNote = document.getElementById("susStatusNote");
+  const tableBody = document.getElementById("susTableBody");
+  const chartArea = document.getElementById("susChartArea");
+
+  if (!totalElement || !tableBody) return;
+
+  const validData = data.filter(item =>
+    item &&
+    Number.isFinite(Number(item.skor_sus))
+  );
+
+  const total = validData.length;
+
+  const average = total > 0
+    ? validData.reduce(
+      (sum, item) => sum + Number(item.skor_sus), 0
+    ) / total
+    : 0;
+
+  // Update metric cards
+  totalElement.textContent = total.toLocaleString("id-ID");
+
+  averageElement.textContent = total > 0
+    ? average.toFixed(1)
+    : "0";
+
+  if (total > 0) {
+    categoryElement.textContent = average >= 68
+      ? "Di atas benchmark"
+      : "Di bawah benchmark";
+  } else {
+    categoryElement.textContent = "Belum ada data";
+  }
+
+  statusElement.textContent = "Terhubung";
+  statusElement.style.color = "var(--emerald-success)";
+  statusNote.textContent = "Data berhasil diterima dari Supabase";
+
+  // Render respondent table
+  if (validData.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align: center;">
+          Belum ada data responden.
+        </td>
+      </tr>
+    `;
+  } else {
+    tableBody.innerHTML = validData.map(item => {
+      const date = item.created_at
+        ? new Date(item.created_at).toLocaleString("id-ID", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        })
+        : "-";
+
+      return `
+        <tr>
+          <td>${escapeSusHTML(item.id ?? "-")}</td>
+          <td><strong>${escapeSusHTML(item.nama ?? "-")}</strong></td>
+          <td>${escapeSusHTML(item.peran ?? "-")}</td>
+          <td>${escapeSusHTML(item.sumber_trafik ?? "-")}</td>
+          <td>${escapeSusHTML(item.tahap_funnel ?? "-")}</td>
+          <td style="color: var(--gold-primary); font-weight: 800;">
+            ${Number(item.skor_sus).toFixed(1)}
+          </td>
+          <td>${escapeSusHTML(date)}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  // Render respondent score bars
+  if (chartArea) {
+    if (validData.length === 0) {
+      chartArea.innerHTML = `
+        <p style="color: var(--text-muted);">
+          Belum ada skor untuk ditampilkan.
+        </p>
+      `;
+    } else {
+      chartArea.innerHTML = validData.map(item => {
+        const score = Math.max(
+          0,
+          Math.min(100, Number(item.skor_sus))
+        );
+
+        return `
+          <div style="margin-bottom: 18px;">
+            <div style="
+              display: flex;
+              justify-content: space-between;
+              gap: 12px;
+              margin-bottom: 7px;
+              font-size: 13px;
+            ">
+              <span>${escapeSusHTML(item.nama ?? "Responden")}</span>
+              <strong style="color: var(--gold-primary);">
+                ${score.toFixed(1)}
+              </strong>
+            </div>
+
+            <div style="
+              width: 100%;
+              height: 10px;
+              background: rgba(255,255,255,0.08);
+              border-radius: 20px;
+              overflow: hidden;
+            ">
+              <div style="
+                width: ${score}%;
+                height: 100%;
+                background: linear-gradient(90deg, #b8860b, #fbbf24);
+                border-radius: 20px;
+              "></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  }
+}
+
+
+// ================= SUS HTML SAFETY =================
+function escapeSusHTML(value) {
+  return String(value).replace(/[&<>"']/g, character => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    };
+
+    return entities[character];
+  });
+}
+
 
 
 // ================= HELPER DATA CALCULATIONS =================
