@@ -169,8 +169,95 @@ function renderCurrentView() {
     renderUnitPerformance();
   } else if (currentPage === "crm") {
     renderCrmLeads();
+  } else if (currentPage === "sus") {
+    renderSusAnalysis();
   }
 }
+
+
+// ================= VIEW: ANALISIS KUESIONER SUS =================
+function renderSusAnalysis() {
+  appContainer.innerHTML = `
+    <section class="page-header-title">
+      <div class="page-subtitle-top">USER EXPERIENCE INTELLIGENCE</div>
+      <h1>Analisis Kuesioner SUS</h1>
+      <p>
+        Monitoring hasil evaluasi System Usability Scale (SUS)
+        dari pengguna platform PropertiSync.
+      </p>
+    </section>
+
+    <section class="metrics-summary-grid">
+      <div class="metric-card-gold">
+        <div class="metric-card-top">
+          <span class="metric-card-title">Total Responden</span>
+        </div>
+        <div class="metric-number-val">-</div>
+        <div class="metric-sub-note">Data menunggu koneksi n8n</div>
+      </div>
+
+      <div class="metric-card-gold">
+        <div class="metric-card-top">
+          <span class="metric-card-title">Rata-rata Skor SUS</span>
+        </div>
+        <div class="metric-number-val">-</div>
+        <div class="metric-sub-note">Skala penilaian 0–100</div>
+      </div>
+
+      <div class="metric-card-gold">
+        <div class="metric-card-top">
+          <span class="metric-card-title">Kategori Usability</span>
+        </div>
+        <div class="metric-number-val">-</div>
+        <div class="metric-sub-note">Menunggu hasil perhitungan</div>
+      </div>
+
+      <div class="metric-card-gold">
+        <div class="metric-card-top">
+          <span class="metric-card-title">Status Data</span>
+        </div>
+        <div class="metric-number-val" style="font-size: 20px;">
+          Belum Terhubung
+        </div>
+        <div class="metric-sub-note">Integrasi Supabase dan n8n</div>
+      </div>
+    </section>
+
+    <section style="
+      margin-top: 24px;
+      padding: 28px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(251,191,36,0.25);
+      border-radius: 12px;
+    ">
+      <h2 style="color: var(--gold-primary); margin-bottom: 12px;">
+        Data Evaluasi Pengguna
+      </h2>
+
+      <p style="
+        color: var(--text-muted);
+        line-height: 1.7;
+        margin-bottom: 18px;
+      ">
+        Halaman ini akan menampilkan hasil kuesioner SUS yang
+        dikirim melalui Website PropTech Form Portal dan disimpan
+        di Supabase.
+      </p>
+
+      <div style="
+        padding: 16px;
+        border-radius: 8px;
+        background: rgba(251,191,36,0.08);
+        border: 1px solid rgba(251,191,36,0.2);
+        color: #fbbf24;
+      ">
+        Menunggu integrasi workflow n8n untuk mengambil dan
+        mengolah data responden.
+      </div>
+    </section>
+  `;
+}
+
 
 // ================= HELPER DATA CALCULATIONS =================
 function getFilteredProptechData() {
